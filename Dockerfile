@@ -3,7 +3,7 @@
 
 FROM debian:jessie
 
-MAINTAINER Jordan Jethwa
+MAINTAINER pcxd
 
 ENV DEBIAN_FRONTEND noninteractive \
     SERVER_URL https://localhost:4443 \
@@ -13,7 +13,7 @@ ENV DEBIAN_FRONTEND noninteractive \
 
 RUN echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/sources.list && \
     apt-get -qq update && \
-    apt-get -qqy install --no-install-recommends bash openjdk-8-jre-headless supervisor procps sudo ca-certificates openssh-client mysql-server mysql-client pwgen curl git && \
+    apt-get -qqy install --no-install-recommends bash openjdk-8-jre-headless supervisor procps sudo ca-certificates libapparmor-dev openssh-client mysql-server mysql-client pwgen curl git && \
     cd /tmp/ && \
     curl -Lo /tmp/rundeck.deb http://dl.bintray.com/rundeck/rundeck-deb/rundeck-2.6.10-1-GA.deb && \
     echo '46a8e437028b7338a265c8eba51a6e135f8d8dbf5d1b383435220836a063e4e2  rundeck.deb' > /tmp/rundeck.sig && \
@@ -34,6 +34,8 @@ RUN echo "deb http://ftp.debian.org/debian jessie-backports main" >> /etc/apt/so
     cd - && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+	
+RUN curl -s -L https://get.docker.com/builds/Linux/x86_64/docker-1.9.1 > /usr/bin/docker; chmod +x /usr/bin/docker
 
 ADD content/ /
 RUN chmod u+x /opt/run && \
